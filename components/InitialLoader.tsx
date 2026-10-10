@@ -13,12 +13,17 @@ export default function InitialLoader({ onLoaded }: InitialLoaderProps) {
 
   useEffect(() => {
     // Critical Priority Assets to preload before revealing Hero
+    const isMob = typeof window !== 'undefined' && window.innerWidth < 768;
+    const heroFirstFrame = isMob
+      ? '/frames/hero-mobile/frame_00001.webp'
+      : '/frames/hero-desktop/frame_000001.jpg';
+
     const criticalAssets = [
       '/bikes/r15-v4.png',
       '/bikes/mt-15-v2.png',
       '/bikes/fz-s-v4-hybrid.png',
       '/bikes/xsr.png',
-      '/frames/hero/frame_000001.jpg',
+      heroFirstFrame,
     ];
 
     let loadedCount = 0;
