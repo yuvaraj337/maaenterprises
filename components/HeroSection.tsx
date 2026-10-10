@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useRef, useEffect, useState, useCallback } from 'react';
+import { Phone, Calendar, ArrowRight, ChevronDown } from 'lucide-react';
 
 interface HeroSectionProps {
   onOpenVisitModal: () => void;
@@ -26,16 +27,10 @@ export default function HeroSection({ onOpenVisitModal, onExploreBikes }: HeroSe
   const latestTargetFrameRef = useRef<number>(0);
   const rafIdRef = useRef<number | null>(null);
 
-  // Format frame filename:
-  // Mobile: 5-digit zero-padded webp (frame_00001.webp - frame_00240.webp)
-  // Desktop: 6-digit zero-padded jpg (frame_000001.jpg - frame_000240.jpg)
-  const getFramePath = useCallback((index: number, mobile: boolean) => {
-    if (mobile) {
-      const frameNum = String(index + 1).padStart(5, '0');
-      return `/frames/hero-mobile/frame_${frameNum}.webp`;
-    }
-    const frameNum = String(index + 1).padStart(6, '0');
-    return `/frames/hero-desktop/frame_${frameNum}.jpg`;
+  // Use the authentic MAA Enterprises — Northstar EV 240-frame sequence for both mobile & desktop
+  const getFramePath = useCallback((index: number) => {
+    const frameNum = String(index + 1).padStart(5, '0');
+    return `/frames/hero-mobile/frame_${frameNum}.webp`;
   }, []);
 
   // Detect mobile vs desktop and reduced-motion preferences
@@ -72,7 +67,6 @@ export default function HeroSection({ onOpenVisitModal, onExploreBikes }: HeroSe
     const ctx = canvas.getContext('2d', { alpha: false });
     if (!ctx) return;
 
-    // Check exact frame
     let img = framesCache.current.get(frameIndex);
 
     // Fallback: search nearest loaded frame in cache so canvas never flashes or flickers
@@ -96,7 +90,6 @@ export default function HeroSection({ onOpenVisitModal, onExploreBikes }: HeroSe
     const width = canvas.width;
     const height = canvas.height;
 
-    // Cover aspect ratio scaling preserving camera focal point & scooter center
     const imgAspect = img.width / img.height;
     const canvasAspect = width / height;
 
@@ -126,14 +119,13 @@ export default function HeroSection({ onOpenVisitModal, onExploreBikes }: HeroSe
     let isMounted = true;
     const cache = framesCache.current;
 
-    // Helper: fetch frame safely
     const fetchFrame = (idx: number): Promise<HTMLImageElement | null> => {
       if (cache.has(idx)) {
         return Promise.resolve(cache.get(idx)!);
       }
       return new Promise((resolve) => {
         const img = new Image();
-        img.src = getFramePath(idx, isMobile);
+        img.src = getFramePath(idx);
         img.onload = () => {
           if (!isMounted) return resolve(null);
           cache.set(idx, img);
@@ -179,7 +171,7 @@ export default function HeroSection({ onOpenVisitModal, onExploreBikes }: HeroSe
       }
     };
 
-    // 4. Fill in intermediate frames progressively with slight breathing room
+    // 4. Fill in intermediate frames progressively
     const loadAllRemainingFrames = async () => {
       for (let i = 1; i < TOTAL_FRAMES - 1; i++) {
         if (!isMounted) return;
@@ -232,7 +224,6 @@ export default function HeroSection({ onOpenVisitModal, onExploreBikes }: HeroSe
       setScrollProgress(rawProgress);
 
       if (prefersReducedMotion) {
-        // If reduced motion requested, stay at final frame or frame 0
         latestTargetFrameRef.current = rawProgress > 0.5 ? TOTAL_FRAMES - 1 : 0;
       } else {
         const targetFrame = Math.min(
@@ -278,7 +269,6 @@ export default function HeroSection({ onOpenVisitModal, onExploreBikes }: HeroSe
     });
   }, []);
 
-  // Quick scroll to showroom entrance (mobile)
   const handleMobileEnterShowroom = useCallback(() => {
     if (!containerRef.current) return;
     const containerTop = containerRef.current.offsetTop;
@@ -289,51 +279,24 @@ export default function HeroSection({ onOpenVisitModal, onExploreBikes }: HeroSe
     });
   }, []);
 
-  // Desktop Transition Opacities
-  const state1Opacity =
-    scrollProgress < 0.28
+  // Transitions: Stage 1 (Exterior), Stage 2 (Inside), Stage 3 (Final Turquoise)
+  const stage1Opacity =
+    scrollProgress < 0.16
       ? 1
-      : scrollProgress > 0.36
+      : scrollProgress > 0.28
       ? 0
-      : 1 - (scrollProgress - 0.28) / (0.36 - 0.28);
+      : 1 - (scrollProgress - 0.16) / (0.28 - 0.16);
 
-  const state2Opacity =
-    scrollProgress < 0.30 || scrollProgress > 0.74
+  const stage2Opacity =
+    scrollProgress < 0.26 || scrollProgress > 0.72
       ? 0
-      : scrollProgress < 0.38
-      ? (scrollProgress - 0.30) / (0.38 - 0.30)
-      : scrollProgress > 0.66
-      ? 1 - (scrollProgress - 0.66) / (0.74 - 0.66)
-      : 1;
-
-  const state3Opacity =
-    scrollProgress < 0.68
-      ? 0
-      : scrollProgress < 0.76
-      ? (scrollProgress - 0.68) / (0.76 - 0.68)
-      : 1;
-
-  // Mobile Transition Opacities:
-  // Mobile Stage 1 (0.00 - 0.22): Exterior of MAA Enterprises — Northstar EV
-  const mobileStage1Opacity =
-    scrollProgress < 0.12
-      ? 1
-      : scrollProgress > 0.22
-      ? 0
-      : 1 - (scrollProgress - 0.12) / (0.22 - 0.12);
-
-  // Mobile Stage 2 (0.25 - 0.70): Camera gliding into showroom & revealing interior & scooters
-  const mobileStage2Opacity =
-    scrollProgress < 0.24 || scrollProgress > 0.72
-      ? 0
-      : scrollProgress < 0.32
-      ? (scrollProgress - 0.24) / (0.32 - 0.24)
+      : scrollProgress < 0.36
+      ? (scrollProgress - 0.26) / (0.36 - 0.26)
       : scrollProgress > 0.64
       ? 1 - (scrollProgress - 0.64) / (0.72 - 0.64)
       : 1;
 
-  // Mobile Stage 3 (0.74 - 1.00): Turquoise Northstar EV scooter prominently displayed
-  const mobileStage3Opacity =
+  const stage3Opacity =
     scrollProgress < 0.72
       ? 0
       : scrollProgress < 0.82
@@ -344,7 +307,7 @@ export default function HeroSection({ onOpenVisitModal, onExploreBikes }: HeroSe
     <section
       ref={containerRef}
       className={`relative w-full bg-black select-none ${
-        isMobile ? 'h-[290vh]' : 'h-[380vh]'
+        isMobile ? 'h-[290vh]' : 'h-[360vh]'
       }`}
     >
       {/* Pinned Viewport Container */}
@@ -362,79 +325,88 @@ export default function HeroSection({ onOpenVisitModal, onExploreBikes }: HeroSe
         <div className="absolute bottom-0 left-0 right-0 h-36 bg-gradient-to-t from-black/85 via-black/25 to-transparent pointer-events-none z-10" />
 
         {/* ========================================================================= */}
-        {/* MOBILE EXPERIENCE: MAA ENTERPRISES — NORTHSTAR EV CINEMATIC ENTRANCE      */}
+        {/* MOBILE HERO VIEW (RESPONSIVE BREAKPOINT < 768px)                           */}
         {/* ========================================================================= */}
         {isMobile ? (
           <>
-            {/* MOBILE STAGE 1: EXTERIOR — "MAA ENTERPRISES — NORTHSTAR EV" */}
+            {/* MOBILE STAGE 1: EXTERIOR */}
             <div
               className="absolute inset-0 z-20 pointer-events-none transition-opacity duration-300 ease-out"
               style={{
-                opacity: mobileStage1Opacity,
-                display: mobileStage1Opacity <= 0.005 ? 'none' : 'block',
+                opacity: stage1Opacity,
+                display: stage1Opacity <= 0.005 ? 'none' : 'block',
               }}
             >
-              {/* Top/Center Brand Header */}
               <div
                 className="absolute left-1/2 top-[16%] -translate-x-1/2 text-center w-full max-w-sm px-5"
                 style={{
-                  transform: `translate(-50%, ${(1 - mobileStage1Opacity) * -20}px)`,
+                  transform: `translate(-50%, ${(1 - stage1Opacity) * -20}px)`,
                 }}
               >
-                {/* Electric Cyan Eyebrow Badge */}
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#00E5FF]/10 border border-[#00E5FF]/30 backdrop-blur-md mb-3 shadow-[0_0_15px_rgba(0,229,255,0.25)]">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#00E5FF] animate-pulse" />
+                {/* Brand pill badge */}
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/60 border border-[#00E5FF]/40 backdrop-blur-md mb-3 shadow-[0_0_15px_rgba(0,229,255,0.25)]">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#10B981] animate-pulse" />
                   <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#00E5FF]">
-                    MAA ENTERPRISES
+                    MAA ENTERPRISES • NORTHSTAR EV
                   </span>
                 </div>
 
-                {/* Main Slanted Title */}
+                {/* Requested Headline */}
                 <h1 className="font-hero-headline text-4xl sm:text-5xl tracking-tight leading-[0.95] mb-2.5">
-                  <span className="hero-text-metallic-white">NORTHSTAR </span>
-                  <span className="hero-text-turquoise hero-text-glow-turquoise">EV</span>
+                  <span className="hero-text-metallic-white">YOUR JOURNEY. </span>
+                  <span className="hero-text-turquoise hero-text-glow-turquoise">
+                    ELECTRIFIED.
+                  </span>
                 </h1>
 
-                {/* Subtitle */}
-                <p className="text-xs font-normal text-white/80 max-w-xs mx-auto leading-relaxed drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]">
-                  Step into the future of urban electric mobility. Pure performance, zero compromises.
+                {/* Requested Supporting Text */}
+                <p className="text-xs font-normal text-white/85 max-w-xs mx-auto leading-relaxed drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]">
+                  Discover Northstar EV electric scooters designed for a smarter, cleaner ride.
                 </p>
 
-                {/* Glowing Accent Line */}
+                {/* Accent Line */}
                 <div className="w-20 h-[2px] bg-gradient-to-r from-transparent via-[#00E5FF] to-transparent mx-auto mt-3 shadow-[0_0_8px_#00E5FF]" />
               </div>
 
-              {/* Bottom Interactive Scroll Prompt */}
-              <div className="absolute left-1/2 bottom-8 -translate-x-1/2 flex flex-col items-center pointer-events-auto">
+              {/* Bottom Actions: Explore Scooters & Call Now */}
+              <div className="absolute left-1/2 bottom-8 -translate-x-1/2 flex flex-col items-center gap-2.5 pointer-events-auto">
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={onExploreBikes}
+                    className="py-2.5 px-4 rounded-full bg-gradient-to-r from-[#E53935] to-[#D32F2F] text-white font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-[0_0_15px_rgba(229,57,53,0.4)] active:scale-95 transition-all cursor-pointer"
+                  >
+                    <span>Explore Scooters</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                  <a
+                    href="tel:9304456205"
+                    className="py-2.5 px-4 rounded-full bg-black/60 border border-white/20 text-white font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 backdrop-blur-md active:scale-95 transition-all"
+                  >
+                    <Phone className="w-3.5 h-3.5 text-[#10B981]" />
+                    <span>Call Now</span>
+                  </a>
+                </div>
+
                 <button
                   onClick={handleMobileEnterShowroom}
-                  className="w-12 h-12 rounded-full border border-[#00E5FF]/40 hover:border-[#00E5FF] bg-black/40 hover:bg-black/60 backdrop-blur-md flex items-center justify-center text-[#00E5FF] transition-all transform active:scale-95 shadow-[0_0_20px_rgba(0,229,255,0.3)] cursor-pointer"
-                  aria-label="Scroll to enter showroom"
+                  className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-[0.22em] text-white/80 hover:text-[#00E5FF] transition-colors mt-1"
                 >
-                  <svg
-                    viewBox="0 0 24 24"
-                    className="w-5 h-5 fill-none stroke-current stroke-2 animate-bounce"
-                  >
-                    <path d="M12 5v14M19 12l-7 7-7-7" />
-                  </svg>
+                  <span>Scroll to enter showroom</span>
+                  <ChevronDown className="w-3.5 h-3.5 text-[#00E5FF] animate-bounce" />
                 </button>
-                <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-white/85 mt-2.5 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
-                  SCROLL TO ENTER SHOWROOM
-                </span>
               </div>
             </div>
 
-            {/* MOBILE STAGE 2: INSIDE SHOWROOM — CINEMATIC UNOBSTRUCTED WALKTHROUGH */}
+            {/* MOBILE STAGE 2: INSIDE SHOWROOM (CINEMATIC UNOBSTRUCTED WALKTHROUGH) */}
             <div
               className="absolute inset-0 z-20 pointer-events-none transition-opacity duration-300 ease-out"
               style={{
-                opacity: mobileStage2Opacity,
-                display: mobileStage2Opacity <= 0.005 ? 'none' : 'block',
+                opacity: stage2Opacity,
+                display: stage2Opacity <= 0.005 ? 'none' : 'block',
               }}
             >
-              {/* Sleek Floating Pill at Bottom Right to Keep Camera Focus Crystal Clear */}
-              <div className="absolute right-4 bottom-8 flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/50 border border-white/15 backdrop-blur-md shadow-lg pointer-events-auto">
-                <span className="w-2 h-2 rounded-full bg-[#00E5FF] animate-pulse" />
+              <div className="absolute right-4 bottom-8 flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/60 border border-white/15 backdrop-blur-md shadow-lg pointer-events-auto">
+                <span className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse" />
                 <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/90">
                   INSIDE SHOWROOM
                 </span>
@@ -444,30 +416,27 @@ export default function HeroSection({ onOpenVisitModal, onExploreBikes }: HeroSe
               </div>
             </div>
 
-            {/* MOBILE STAGE 3: FINAL SHOWCASE — TURQUOISE NORTHSTAR EV SCOOTER */}
+            {/* MOBILE STAGE 3: TURQUOISE NORTHSTAR EV SCOOTER */}
             <div
               className="absolute inset-0 z-20 pointer-events-none transition-opacity duration-300 ease-out"
               style={{
-                opacity: mobileStage3Opacity,
-                display: mobileStage3Opacity <= 0.005 ? 'none' : 'block',
+                opacity: stage3Opacity,
+                display: stage3Opacity <= 0.005 ? 'none' : 'block',
               }}
             >
-              {/* Upper Screen Title Block (Leaving Turquoise Scooter in Center Free) */}
               <div
                 className="absolute left-1/2 top-[12%] -translate-x-1/2 text-center w-full max-w-sm px-5"
                 style={{
-                  transform: `translate(-50%, ${(1 - mobileStage3Opacity) * 15}px)`,
+                  transform: `translate(-50%, ${(1 - stage3Opacity) * 15}px)`,
                 }}
               >
-                {/* Flagship Badge */}
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#00E5FF]/15 border border-[#00E5FF]/40 backdrop-blur-md mb-2 shadow-[0_0_15px_rgba(0,229,255,0.3)]">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/60 border border-[#00E5FF]/40 backdrop-blur-md mb-2 shadow-[0_0_15px_rgba(0,229,255,0.3)]">
                   <span className="text-[9px] font-extrabold uppercase tracking-[0.25em] text-[#00E5FF]">
                     NORTHSTAR EV • FLAGSHIP
                   </span>
                 </div>
 
-                {/* Bold Turquoise Headline */}
-                <h2 className="font-hero-headline text-3xl sm:text-4xl tracking-tight leading-tight mb-1.5">
+                <h2 className="font-hero-headline text-3xl sm:text-4xl tracking-tight leading-tight mb-1">
                   <span className="block hero-text-metallic-white">THE TURQUOISE</span>
                   <span className="block hero-text-turquoise hero-text-glow-turquoise">
                     EDITION
@@ -475,146 +444,131 @@ export default function HeroSection({ onOpenVisitModal, onExploreBikes }: HeroSe
                 </h2>
 
                 <p className="text-[11px] font-normal text-white/80 max-w-xs mx-auto drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
-                  Instant electric torque. Intelligent regenerative braking. Pure road presence.
+                  Instant electric torque. Pure zero-emission performance. Bajaj Finserv EMI available.
                 </p>
               </div>
 
-              {/* Bottom Touch Actions & Next Section Transition Hint */}
               <div className="absolute inset-x-4 bottom-6 flex flex-col items-center gap-2.5 pointer-events-auto">
                 <div className="flex items-center justify-center gap-2.5 w-full max-w-xs">
                   <button
                     onClick={onExploreBikes}
                     className="flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-[#00A3FF] to-[#00E5FF] text-black font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-[0_0_20px_rgba(0,229,255,0.4)] active:scale-95 transition-all cursor-pointer"
                   >
-                    <span>Explore Fleet</span>
-                    <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 fill-none stroke-current stroke-2">
-                      <path d="M5 12h14M12 5l7 7-7 7" />
-                    </svg>
+                    <span>Explore Colours</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
                   </button>
 
-                  <button
-                    onClick={onOpenVisitModal}
-                    className="flex-1 py-3 px-4 rounded-xl bg-black/60 hover:bg-black/80 border border-white/20 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center backdrop-blur-md active:scale-95 transition-all cursor-pointer shadow-md"
+                  <a
+                    href="tel:9304456205"
+                    className="flex-1 py-3 px-4 rounded-xl bg-black/60 border border-white/20 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 backdrop-blur-md active:scale-95 transition-all"
                   >
-                    <span>Book Visit</span>
-                  </button>
+                    <Phone className="w-3.5 h-3.5 text-[#10B981]" />
+                    <span>Call Now</span>
+                  </a>
                 </div>
 
-                {/* Hint to continue scrolling down naturally into next section */}
                 <div className="flex items-center gap-1.5 text-[9px] uppercase font-bold tracking-[0.2em] text-white/60">
-                  <span>Scroll to explore models</span>
-                  <svg viewBox="0 0 24 24" className="w-3 h-3 fill-none stroke-current stroke-2 animate-bounce">
-                    <path d="M19 9l-7 7-7-7" />
-                  </svg>
+                  <span>Scroll down to explore fleet</span>
+                  <ChevronDown className="w-3 h-3 text-[#00E5FF] animate-bounce" />
                 </div>
               </div>
             </div>
           </>
         ) : (
           /* ========================================================================= */
-          /* DESKTOP EXPERIENCE: PRESERVED 100% UNCHANGED                              */
+          /* DESKTOP HERO VIEW (REBRANDED FOR MAA ENTERPRISES — NORTHSTAR EV)          */
           /* ========================================================================= */
           <>
-            {/* STATE 1: EXTERIOR VIEW — "READY TO RIDE?" */}
+            {/* DESKTOP STATE 1: EXTERIOR */}
             <div
               className="absolute inset-0 z-20 pointer-events-none select-none transition-opacity duration-300 ease-out"
               style={{
-                opacity: state1Opacity,
-                display: state1Opacity <= 0.005 ? 'none' : 'block',
+                opacity: stage1Opacity,
+                display: stage1Opacity <= 0.005 ? 'none' : 'block',
               }}
             >
               <div
                 className="absolute left-1/2 top-[20%] sm:top-[22%] md:top-[24%] -translate-x-1/2 text-center w-full max-w-4xl px-4"
-                style={{ transform: `translate(-50%, ${(1 - state1Opacity) * -15}px)` }}
+                style={{ transform: `translate(-50%, ${(1 - stage1Opacity) * -15}px)` }}
               >
-                <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-[0.25em] text-white/80 mb-2 sm:mb-3 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
-                  WELCOME TO HIRA AUTO AGENCY
-                </p>
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/50 border border-[#00E5FF]/30 backdrop-blur-md mb-3">
+                  <span className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse" />
+                  <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-[0.25em] text-[#00E5FF]">
+                    MAA ENTERPRISES • NEAR SBI BANK, MAHAGAMA
+                  </span>
+                </div>
 
-                <h1 className="font-hero-headline text-4xl sm:text-6xl md:text-7xl lg:text-[5.5rem] tracking-[-0.015em] leading-[0.95] mb-3 sm:mb-4">
-                  <span className="hero-text-metallic-white">READY TO </span>
-                  <span className="hero-text-electric-blue hero-text-glow-blue">RIDE?</span>
+                <h1 className="font-hero-headline text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] tracking-[-0.015em] leading-[0.95] mb-3 sm:mb-4">
+                  <span className="hero-text-metallic-white">YOUR JOURNEY. </span>
+                  <span className="hero-text-turquoise hero-text-glow-turquoise">ELECTRIFIED.</span>
                 </h1>
 
-                <p className="text-xs sm:text-sm md:text-base font-normal text-white/75 max-w-lg mx-auto leading-relaxed mb-4 sm:mb-5 drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]">
-                  Discover Yamaha&apos;s world of performance, innovation<br className="hidden sm:block" />
-                  {' '}and limitless adventure.
+                <p className="text-xs sm:text-sm md:text-base font-normal text-white/80 max-w-lg mx-auto leading-relaxed mb-4 sm:mb-5 drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]">
+                  Discover Northstar EV electric scooters designed for a smarter, cleaner ride. Electric scooter sales, service & genuine spare parts.
                 </p>
 
                 <div className="flex items-center justify-center gap-3 sm:gap-4">
-                  <span className="w-12 sm:w-20 h-[1.5px] bg-gradient-to-r from-transparent to-[#00A3FF]" />
-                  <span className="text-[9px] sm:text-[11px] font-bold uppercase tracking-[0.25em] text-sky-400 drop-shadow-[0_0_8px_rgba(0,163,255,0.7)]">
-                    RIDE THE NEXT LEVEL
+                  <span className="w-12 sm:w-20 h-[1.5px] bg-gradient-to-r from-transparent to-[#00E5FF]" />
+                  <span className="text-[9px] sm:text-[11px] font-bold uppercase tracking-[0.25em] text-[#00E5FF] drop-shadow-[0_0_8px_rgba(0,229,255,0.7)]">
+                    RIDE A CLEANER TOMORROW • BAJAJ FINSERV EMI AVAILABLE
                   </span>
-                  <span className="w-12 sm:w-20 h-[1.5px] bg-gradient-to-l from-transparent to-[#00A3FF]" />
+                  <span className="w-12 sm:w-20 h-[1.5px] bg-gradient-to-l from-transparent to-[#00E5FF]" />
                 </div>
               </div>
 
               <div className="absolute left-1/2 bottom-8 sm:bottom-10 -translate-x-1/2 flex flex-col items-center pointer-events-auto">
                 <button
                   onClick={() => handleScrollToStage(2)}
-                  className="w-11 h-11 sm:w-12 sm:h-12 rounded-full border border-white/40 hover:border-white bg-black/25 hover:bg-black/50 backdrop-blur-sm flex items-center justify-center text-white transition-all transform hover:scale-105 active:scale-95 shadow-[0_4px_16px_rgba(0,0,0,0.6)] cursor-pointer"
+                  className="w-11 h-11 sm:w-12 sm:h-12 rounded-full border border-white/40 hover:border-[#00E5FF] bg-black/40 hover:bg-black/60 backdrop-blur-sm flex items-center justify-center text-white transition-all transform hover:scale-105 active:scale-95 shadow-[0_4px_16px_rgba(0,0,0,0.6)] cursor-pointer"
                   aria-label="Scroll to explore showroom"
                 >
-                  <svg viewBox="0 0 24 24" className="w-5 h-5 fill-none stroke-current stroke-2 animate-bounce">
-                    <path d="M12 5v14M19 12l-7 7-7-7" />
-                  </svg>
+                  <ChevronDown className="w-5 h-5 animate-bounce text-[#00E5FF]" />
                 </button>
                 <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-[0.25em] text-white/70 mt-2.5 drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]">
-                  SCROLL TO EXPLORE
+                  SCROLL TO EXPLORE SHOWROOM
                 </span>
               </div>
             </div>
 
-            {/* STATE 2: INSIDE SHOWROOM — "FEEL THE RIDE" */}
+            {/* DESKTOP STATE 2: INSIDE SHOWROOM */}
             <div
               className="absolute inset-0 z-20 pointer-events-none select-none transition-opacity duration-300 ease-out"
               style={{
-                opacity: state2Opacity,
-                display: state2Opacity <= 0.005 ? 'none' : 'block',
+                opacity: stage2Opacity,
+                display: stage2Opacity <= 0.005 ? 'none' : 'block',
               }}
             >
               <div
-                className="absolute left-1/2 top-[64%] sm:top-[66%] md:top-[68%] -translate-x-1/2 text-center w-full max-w-4xl px-4"
-                style={{ transform: `translate(-50%, ${(1 - state2Opacity) * 15}px)` }}
+                className="absolute left-1/2 top-[62%] sm:top-[64%] -translate-x-1/2 text-center w-full max-w-4xl px-4"
+                style={{ transform: `translate(-50%, ${(1 - stage2Opacity) * 15}px)` }}
               >
                 <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-[0.25em] text-white/80 mb-2 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
-                  WELCOME TO HIRA AUTO AGENCY
+                  MAA ENTERPRISES — NORTHSTAR EV
                 </p>
 
                 <h2 className="font-hero-headline text-4xl sm:text-6xl md:text-7xl lg:text-[5.5rem] tracking-[-0.015em] leading-[0.95] mb-3">
-                  <span className="hero-text-metallic-white">FEEL THE </span>
-                  <span className="relative inline-block">
-                    <span className="hero-text-electric-blue hero-text-glow-blue relative z-10">RIDE</span>
-                    <span className="absolute -inset-y-1 left-2 sm:left-4 -right-8 sm:-right-14 bg-gradient-to-r from-[#00A3FF]/75 via-[#0080FF]/40 to-transparent blur-md pointer-events-none" />
-                  </span>
+                  <span className="hero-text-metallic-white">ELECTRIC </span>
+                  <span className="hero-text-turquoise hero-text-glow-turquoise">MOBILITY</span>
                 </h2>
 
                 <p className="text-xs sm:text-sm md:text-base font-normal text-white/80 max-w-xl mx-auto leading-relaxed mb-3 sm:mb-4 drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]">
-                  Experience Yamaha up close. Explore. Touch. Imagine your next ride.
+                  A Brighter Tomorrow. Experience Northstar EV up close. Explore vibrant colours and quiet efficiency.
                 </p>
 
                 <div className="flex items-center justify-center gap-3 sm:gap-4">
-                  <span className="w-12 sm:w-20 h-[1.5px] bg-gradient-to-r from-transparent to-[#00A3FF]" />
-                  <span className="text-[9px] sm:text-[11px] font-bold uppercase tracking-[0.25em] text-sky-400 drop-shadow-[0_0_8px_rgba(0,163,255,0.7)]">
-                    RIDE THE NEXT LEVEL
+                  <span className="w-12 sm:w-20 h-[1.5px] bg-gradient-to-r from-transparent to-[#00E5FF]" />
+                  <span className="text-[9px] sm:text-[11px] font-bold uppercase tracking-[0.25em] text-[#00E5FF]">
+                    MAKE EVERY RIDE A BETTER CHOICE
                   </span>
-                  <span className="w-12 sm:w-20 h-[1.5px] bg-gradient-to-l from-transparent to-[#00A3FF]" />
+                  <span className="w-12 sm:w-20 h-[1.5px] bg-gradient-to-l from-transparent to-[#00E5FF]" />
                 </div>
               </div>
 
               <div className="absolute inset-x-4 sm:inset-x-8 md:inset-x-12 bottom-6 sm:bottom-8 flex items-center justify-between pointer-events-auto">
                 <div className="flex items-center gap-2 sm:gap-2.5 drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]">
-                  <span className="text-lg sm:text-2xl font-black text-white leading-none">03</span>
+                  <span className="text-lg sm:text-2xl font-black text-white leading-none">02</span>
                   <span className="h-4 w-[1.5px] bg-white/40" />
                   <span className="text-xs sm:text-sm font-semibold text-white/90 tracking-wide">Inside Showroom</span>
-                </div>
-
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <span className="w-6 sm:w-10 h-1 rounded-full bg-white/25" />
-                  <span className="w-6 sm:w-10 h-1 rounded-full bg-white/25" />
-                  <span className="w-9 sm:w-14 h-1.5 rounded-full bg-[#0099FF] shadow-[0_0_12px_#0099FF]" />
-                  <span className="w-6 sm:w-10 h-1 rounded-full bg-white/25" />
                 </div>
 
                 <div className="flex items-center gap-2 sm:gap-2.5">
@@ -623,86 +577,70 @@ export default function HeroSection({ onOpenVisitModal, onExploreBikes }: HeroSe
                     className="w-10 h-10 sm:w-11 sm:h-11 rounded-full border border-white/30 hover:border-white bg-black/40 hover:bg-black/60 backdrop-blur-sm flex items-center justify-center text-white transition-all transform hover:scale-105 active:scale-95 shadow-md"
                     aria-label="Previous scene"
                   >
-                    <svg viewBox="0 0 24 24" className="w-5 h-5 fill-none stroke-current stroke-2">
-                      <path d="M15 18l-6-6 6-6" />
-                    </svg>
+                    <ChevronDown className="w-5 h-5 rotate-180" />
                   </button>
                   <button
                     onClick={() => handleScrollToStage(3)}
                     className="w-10 h-10 sm:w-11 sm:h-11 rounded-full border border-white/30 hover:border-white bg-black/40 hover:bg-black/60 backdrop-blur-sm flex items-center justify-center text-white transition-all transform hover:scale-105 active:scale-95 shadow-md"
                     aria-label="Next scene"
                   >
-                    <svg viewBox="0 0 24 24" className="w-5 h-5 fill-none stroke-current stroke-2">
-                      <path d="M9 18l6-6-6-6" />
-                    </svg>
+                    <ChevronDown className="w-5 h-5" />
                   </button>
                 </div>
               </div>
             </div>
 
-            {/* STATE 3: RECEPTION — "YOUR RIDE STARTS HERE" */}
+            {/* DESKTOP STATE 3: FLAGSHIP SHOWCASE */}
             <div
               className="absolute inset-0 z-20 pointer-events-none select-none transition-opacity duration-300 ease-out"
               style={{
-                opacity: state3Opacity,
-                display: state3Opacity <= 0.005 ? 'none' : 'block',
+                opacity: stage3Opacity,
+                display: stage3Opacity <= 0.005 ? 'none' : 'block',
               }}
             >
               <div
-                className="absolute left-1/2 top-[64%] sm:top-[66%] md:top-[68%] -translate-x-1/2 text-center w-full max-w-4xl px-4"
-                style={{ transform: `translate(-50%, ${(1 - state3Opacity) * 15}px)` }}
+                className="absolute left-1/2 top-[62%] sm:top-[64%] -translate-x-1/2 text-center w-full max-w-4xl px-4"
+                style={{ transform: `translate(-50%, ${(1 - stage3Opacity) * 15}px)` }}
               >
                 <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-[0.25em] text-white/80 mb-2 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
-                  WELCOME TO HIRA AUTO AGENCY
+                  FLAGSHIP SHOWCASE • PROPRIETOR: J.K. PODDAR
                 </p>
 
                 <h2 className="font-hero-headline text-4xl sm:text-6xl md:text-7xl lg:text-[5.5rem] tracking-[-0.015em] leading-[0.92] mb-3 sm:mb-4">
-                  <span className="block hero-text-metallic-white">YOUR RIDE</span>
-                  <span className="block">
-                    <span className="hero-text-metallic-white">STARTS </span>
-                    <span className="hero-text-electric-blue hero-text-glow-blue">HERE</span>
+                  <span className="block hero-text-metallic-white">THE TURQUOISE</span>
+                  <span className="block hero-text-turquoise hero-text-glow-turquoise">
+                    EDITION
                   </span>
                 </h2>
 
                 <p className="text-xs sm:text-sm md:text-base font-normal text-white/80 max-w-xl mx-auto leading-relaxed mb-3 drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]">
-                  Explore. Experience. Belong to the Yamaha Family.
+                  Visit us Near SBI Bank, Mahagama. Electric scooter sales, service & genuine parts.
                 </p>
 
-                <div className="w-16 sm:w-20 h-[2px] bg-gradient-to-r from-transparent via-[#00A3FF] to-transparent mx-auto mt-2" />
+                <div className="w-16 sm:w-20 h-[2px] bg-gradient-to-r from-transparent via-[#00E5FF] to-transparent mx-auto mt-2" />
               </div>
 
               <div className="absolute inset-x-4 sm:inset-x-8 md:inset-x-12 bottom-6 sm:bottom-8 flex items-center justify-between pointer-events-auto">
                 <div className="flex items-center gap-2 sm:gap-2.5 drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]">
-                  <span className="text-lg sm:text-2xl font-black text-white leading-none">04</span>
+                  <span className="text-lg sm:text-2xl font-black text-white leading-none">03</span>
                   <span className="h-4 w-[1.5px] bg-white/40" />
-                  <span className="text-xs sm:text-sm font-semibold text-white/90 tracking-wide">At Reception (Final)</span>
-                </div>
-
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <span className="w-6 sm:w-10 h-1 rounded-full bg-white/25" />
-                  <span className="w-6 sm:w-10 h-1 rounded-full bg-white/25" />
-                  <span className="w-6 sm:w-10 h-1 rounded-full bg-white/25" />
-                  <span className="w-9 sm:w-14 h-1.5 rounded-full bg-[#0099FF] shadow-[0_0_12px_#0099FF]" />
+                  <span className="text-xs sm:text-sm font-semibold text-white/90 tracking-wide">The Turquoise Edition</span>
                 </div>
 
                 <div className="flex items-center gap-2 sm:gap-2.5">
-                  <button
-                    onClick={() => handleScrollToStage(2)}
-                    className="w-10 h-10 sm:w-11 sm:h-11 rounded-full border border-white/30 hover:border-white bg-black/40 hover:bg-black/60 backdrop-blur-sm flex items-center justify-center text-white transition-all transform hover:scale-105 active:scale-95 shadow-md"
-                    aria-label="Previous scene"
+                  <a
+                    href="tel:9304456205"
+                    className="px-4 py-2 rounded-full bg-black/60 border border-white/20 text-white font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 backdrop-blur-md hover:border-[#10B981] transition-all"
                   >
-                    <svg viewBox="0 0 24 24" className="w-5 h-5 fill-none stroke-current stroke-2">
-                      <path d="M15 18l-6-6 6-6" />
-                    </svg>
-                  </button>
+                    <Phone className="w-3.5 h-3.5 text-[#10B981]" />
+                    <span>Call 9304456205</span>
+                  </a>
                   <button
                     onClick={onExploreBikes}
-                    className="w-10 h-10 sm:w-11 sm:h-11 rounded-full border border-white/30 hover:border-white bg-black/40 hover:bg-black/60 backdrop-blur-sm flex items-center justify-center text-white transition-all transform hover:scale-105 active:scale-95 shadow-md"
-                    aria-label="Explore bikes catalog"
+                    className="px-5 py-2 rounded-full bg-gradient-to-r from-[#00A3FF] to-[#00E5FF] text-black font-extrabold text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-[0_0_15px_rgba(0,229,255,0.4)] hover:scale-105 active:scale-95 transition-all cursor-pointer"
                   >
-                    <svg viewBox="0 0 24 24" className="w-5 h-5 fill-none stroke-current stroke-2">
-                      <path d="M9 18l6-6-6-6" />
-                    </svg>
+                    <span>Explore Fleet</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
               </div>

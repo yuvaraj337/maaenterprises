@@ -8,22 +8,15 @@ interface InitialLoaderProps {
 
 export default function InitialLoader({ onLoaded }: InitialLoaderProps) {
   const [progress, setProgress] = useState(0);
-  const [statusText, setStatusText] = useState('Initializing Showroom Experience...');
+  const [statusText, setStatusText] = useState('Initializing Electric Mobility Showroom...');
   const [isFadingOut, setIsFadingOut] = useState(false);
 
   useEffect(() => {
     // Critical Priority Assets to preload before revealing Hero
-    const isMob = typeof window !== 'undefined' && window.innerWidth < 768;
-    const heroFirstFrame = isMob
-      ? '/frames/hero-mobile/frame_00001.webp'
-      : '/frames/hero-desktop/frame_000001.jpg';
-
     const criticalAssets = [
-      '/bikes/r15-v4.png',
-      '/bikes/mt-15-v2.png',
-      '/bikes/fz-s-v4-hybrid.png',
-      '/bikes/xsr.png',
-      heroFirstFrame,
+      '/frames/hero-mobile/frame_00001.webp',
+      '/scooters/turquoise.jpg',
+      '/scooters/red.jpg',
     ];
 
     let loadedCount = 0;
@@ -35,9 +28,9 @@ export default function InitialLoader({ onLoaded }: InitialLoaderProps) {
       setProgress(pct);
 
       if (pct < 40) {
-        setStatusText('Loading Yamaha MotoGP Engineering...');
+        setStatusText('Loading Northstar EV Showroom...');
       } else if (pct < 80) {
-        setStatusText('Preparing Cinematic 4-Bike Showcase...');
+        setStatusText('Preparing Electric Scooter Showcase...');
       } else {
         setStatusText('Showroom Ready');
       }
@@ -56,7 +49,7 @@ export default function InitialLoader({ onLoaded }: InitialLoaderProps) {
       const img = new Image();
       img.src = src;
       img.onload = updateProgress;
-      img.onerror = updateProgress; // Don't block if one asset errors
+      img.onerror = updateProgress;
     });
 
     // Fallback safety timeout so user is never stuck
@@ -66,7 +59,7 @@ export default function InitialLoader({ onLoaded }: InitialLoaderProps) {
       setTimeout(() => {
         onLoaded();
       }, 600);
-    }, 4500);
+    }, 3500);
 
     return () => clearTimeout(safetyTimeout);
   }, [onLoaded]);
@@ -77,34 +70,48 @@ export default function InitialLoader({ onLoaded }: InitialLoaderProps) {
         isFadingOut ? 'opacity-0 pointer-events-none' : 'opacity-100'
       }`}
     >
-      {/* Subtle Radial Atmosphere */}
-      <div className="absolute w-[500px] h-[500px] bg-blue-600/15 rounded-full blur-[120px] pointer-events-none animate-pulse" />
+      {/* Subtle Radial Atmosphere with Green Leaf & Electric Cyan Glow */}
+      <div className="absolute w-[500px] h-[500px] bg-[#00E5FF]/10 rounded-full blur-[140px] pointer-events-none animate-pulse" />
+      <div className="absolute w-[350px] h-[350px] bg-emerald-500/10 rounded-full blur-[100px] pointer-events-none" />
 
-      {/* Yamaha Emblem & Branding */}
+      {/* MAA Enterprises & Northstar EV Branding */}
       <div className="relative z-10 flex flex-col items-center">
-        {/* Glowing Tuning Fork Emblem */}
-        <div className="relative w-20 h-20 mb-6 flex items-center justify-center">
-          <div className="absolute inset-0 bg-[#0066FF]/30 rounded-full blur-xl animate-ping" style={{ animationDuration: '3s' }} />
-          <div className="relative w-16 h-16 rounded-full bg-gradient-to-tr from-[#0033aa] to-[#0088ff] flex items-center justify-center shadow-[0_0_30px_rgba(0,102,255,0.6)] border border-[#00A3FF]/40">
-            <svg viewBox="0 0 100 100" className="w-9 h-9 fill-white filter drop-shadow-md">
-              <circle cx="50" cy="50" r="46" fill="none" stroke="white" strokeWidth="6" />
-              <path d="M50 16 L50 84 M16 50 L84 50 M26 26 L74 74 M74 26 L26 74" stroke="white" strokeWidth="4" />
+        {/* Glowing Eco Star Crest */}
+        <div className="relative w-20 h-20 mb-5 flex items-center justify-center">
+          <div
+            className="absolute inset-0 bg-[#00E5FF]/25 rounded-full blur-xl animate-ping"
+            style={{ animationDuration: '3s' }}
+          />
+          <div className="relative w-16 h-16 rounded-full bg-gradient-to-tr from-[#0a1424] via-[#0d2238] to-[#12363a] flex items-center justify-center shadow-[0_0_30px_rgba(0,229,255,0.45)] border border-[#00E5FF]/40">
+            {/* Northstar 4-Point Compass Star + Green Leaf Accent */}
+            <svg viewBox="0 0 100 100" className="w-9 h-9 fill-[#00E5FF] filter drop-shadow-md">
+              {/* Central 4-point star */}
+              <polygon points="50,15 57,43 85,50 57,57 50,85 43,57 15,50 43,43" fill="#00E5FF" />
+              {/* Eco Leaf Accent */}
+              <path
+                d="M60 25 C75 25 80 40 75 50 C68 46 62 40 60 25 Z"
+                fill="#10B981"
+              />
             </svg>
           </div>
         </div>
 
-        {/* Yamaha Typography */}
-        <h1 className="text-2xl sm:text-3xl font-black uppercase tracking-[0.3em] text-white font-display mb-1">
-          YAMAHA
+        {/* MAA Enterprises Typography */}
+        <h1 className="text-2xl sm:text-3xl font-black uppercase tracking-[0.25em] text-white font-display mb-1 flex items-center gap-1.5">
+          <span>MAA</span>
+          <span className="text-[#E53935]">ENTERPRISES</span>
         </h1>
-        <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#00E5FF] mb-8">
-          HIRA AUTO AGENCY • MOHANPUR
+        <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#00E5FF] mb-1">
+          NORTHSTAR EV • MAHAGAMA
+        </p>
+        <p className="text-[9px] font-semibold tracking-wider text-gray-400 uppercase mb-8">
+          Ride a Cleaner Tomorrow
         </p>
 
         {/* Sleek Progress Bar */}
         <div className="w-56 sm:w-64 h-[3px] bg-white/10 rounded-full overflow-hidden mb-3 relative">
           <div
-            className="h-full bg-gradient-to-r from-[#0066FF] to-[#00E5FF] rounded-full transition-all duration-300 ease-out shadow-[0_0_10px_#00E5FF]"
+            className="h-full bg-gradient-to-r from-[#00E5FF] via-[#10B981] to-[#00E5FF] rounded-full transition-all duration-300 ease-out shadow-[0_0_10px_#00E5FF]"
             style={{ width: `${progress}%` }}
           />
         </div>
