@@ -4,13 +4,14 @@ import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import HeroSection from '@/components/HeroSection';
 import FeaturedSection from '@/components/FeaturedSection';
-import EngineeringSection from '@/components/EngineeringSection';
-import BikeConfiguratorModal, { Bike } from '@/components/BikeConfiguratorModal';
-import BookingModal from '@/components/BookingModal';
-import VisitModal from '@/components/VisitModal';
+import WhyChooseUs from '@/components/WhyChooseUs';
+import ServiceSection from '@/components/ServiceSection';
 import LocationSection from '@/components/LocationSection';
 import Footer from '@/components/Footer';
 import InitialLoader from '@/components/InitialLoader';
+import BikeConfiguratorModal, { Bike } from '@/components/BikeConfiguratorModal';
+import BookingModal from '@/components/BookingModal';
+import VisitModal from '@/components/VisitModal';
 
 export default function HomePage() {
   const [bikes, setBikes] = useState<Bike[]>([]);
@@ -25,7 +26,7 @@ export default function HomePage() {
   const [bookingBikeId, setBookingBikeId] = useState<string | undefined>(undefined);
   const [bookingVariantId, setBookingVariantId] = useState<string | undefined>(undefined);
 
-  // Fetch bikes & variants from database
+  // Fetch Northstar EV electric scooters from database
   useEffect(() => {
     async function loadBikes() {
       try {
@@ -35,7 +36,7 @@ export default function HomePage() {
           setBikes(data.bikes);
         }
       } catch (err) {
-        console.error('Failed to load bikes from database:', err);
+        console.error('Failed to load electric scooters from database:', err);
       } finally {
         setLoading(false);
       }
@@ -63,7 +64,7 @@ export default function HomePage() {
   };
 
   const handleExploreBikes = () => {
-    const el = document.getElementById('catalog');
+    const el = document.getElementById('scooters');
     if (el) el.scrollIntoView({ behavior: 'smooth' });
   };
 
@@ -86,7 +87,7 @@ export default function HomePage() {
         onExploreBikes={handleExploreBikes}
       />
 
-      {/* 3. SECTION 2 — Pinned 4-Bike Showcase + XSR Transition + Full Yamaha Catalog */}
+      {/* 3. SECTION 2 — Northstar EV Scooter Showcase & 5-Colour Catalogue */}
       <FeaturedSection
         bikes={bikes}
         onSelectBike={handleSelectBikeForConfigurator}
@@ -94,25 +95,23 @@ export default function HomePage() {
         onOpenVisitModal={handleOpenVisitModal}
       />
 
-      {/* 4. ENGINEERING SECTION — R15 Disassembly (180 30-FPS Frames) */}
-      <EngineeringSection
-        onExploreR15={() => {
-          const r15 = bikes.find((b) => b.slug.includes('r15'));
-          if (r15) handleSelectBikeForConfigurator(r15);
-        }}
-      />
+      {/* 4. SECTION 3 — Benefits Section: Make Every Ride a Better Choice */}
+      <WhyChooseUs onOpenVisitModal={handleOpenVisitModal} />
 
-      {/* 5. VERIFIED MOHANPUR LOCATION & MAP */}
+      {/* 5. SECTION 4 — Dealership Services (Sales, Service, Spare Parts, EMI) */}
+      <ServiceSection onOpenVisitModal={handleOpenVisitModal} />
+
+      {/* 6. SECTION 5 — Verified Mahagama Location, Map & Prominent Actions */}
       <LocationSection onOpenVisitModal={handleOpenVisitModal} />
 
-      {/* 6. FINAL CTA & FOOTER */}
+      {/* 7. FOOTER */}
       <Footer
         onOpenVisitModal={handleOpenVisitModal}
         onExploreBikes={handleExploreBikes}
       />
 
       {/* MODALS */}
-      {/* Bike Configurator & Split Details View */}
+      {/* Scooter Configurator / Colour Details View */}
       <BikeConfiguratorModal
         bike={configuratorBike}
         isOpen={!!configuratorBike}
@@ -127,7 +126,7 @@ export default function HomePage() {
         }}
       />
 
-      {/* Bike Booking Modal */}
+      {/* Scooter Booking / Enquiry Modal */}
       <BookingModal
         isOpen={isBookingModalOpen}
         onClose={() => setIsBookingModalOpen(false)}

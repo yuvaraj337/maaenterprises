@@ -2,8 +2,8 @@ import jwt from 'jsonwebtoken';
 import { cookies } from 'next/headers';
 import { getDb } from './db';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'hira_yamaha_super_secure_jwt_secret_2026';
-const COOKIE_NAME = 'hira_admin_token';
+const JWT_SECRET = process.env.JWT_SECRET || 'maa_enterprises_northstar_jwt_secret_2026';
+export const COOKIE_NAME = 'maa_admin_token';
 
 export interface AdminSession {
   id: string;

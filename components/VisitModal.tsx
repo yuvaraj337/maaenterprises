@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { X, Calendar, Clock, CheckCircle2, ShieldCheck, AlertCircle, Loader2, Phone } from 'lucide-react';
+import { X, Calendar, Clock, CheckCircle2, ShieldCheck, AlertCircle, Loader2, Phone, Zap } from 'lucide-react';
 import { Bike } from './BikeConfiguratorModal';
 
 interface VisitModalProps {
@@ -79,11 +79,11 @@ export default function VisitModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-xl overflow-y-auto">
-      <div className="relative w-full max-w-xl rounded-3xl glass-panel border border-white/15 p-6 sm:p-8 shadow-2xl my-auto text-left">
+      <div className="relative w-full max-w-xl rounded-3xl bg-[#0a1020] border border-white/15 p-6 sm:p-8 shadow-2xl my-auto text-left">
         {/* Close Button */}
         <button
           onClick={handleReset}
-          className="absolute top-5 right-5 p-2 rounded-full bg-white/5 text-gray-400 hover:text-white hover:bg-white/10 transition-colors"
+          className="absolute top-5 right-5 p-2 rounded-full bg-white/5 text-gray-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
         >
           <X className="w-5 h-5" />
         </button>
@@ -95,21 +95,21 @@ export default function VisitModal({
               <CheckCircle2 className="w-10 h-10" />
             </div>
 
-            <span className="px-3 py-1 rounded-full bg-yamaha-racing/30 text-yamaha-cyan text-xs font-bold uppercase tracking-wider">
-              Visit Appointment Scheduled
+            <span className="px-3 py-1 rounded-full bg-[#00E5FF]/20 text-[#00E5FF] text-xs font-bold uppercase tracking-wider">
+              Showroom Appointment Reserved
             </span>
 
-            <h3 className="text-2xl sm:text-3xl font-black text-white uppercase font-display mt-2">
-              WE ARE READY FOR YOU!
+            <h3 className="text-2xl sm:text-3xl font-black text-white uppercase font-display mt-3">
+              WE LOOK FORWARD TO WELCOMING YOU!
             </h3>
             <p className="text-xs sm:text-sm text-gray-300 max-w-md mx-auto mt-1">
-              Your showroom visit at Hira Auto Agency, Mohanpur has been reserved.
+              Your visit at MAA Enterprises — Northstar EV, Mahagama has been reserved.
             </p>
 
-            <div className="mt-6 p-5 rounded-2xl bg-black/40 border border-white/10 text-left space-y-2 max-w-md mx-auto text-xs">
+            <div className="mt-6 p-5 rounded-2xl bg-black/50 border border-white/10 text-left space-y-2 max-w-md mx-auto text-xs">
               <div className="flex justify-between pb-2 border-b border-white/10">
                 <span className="text-gray-400">Appointment Code:</span>
-                <span className="font-bold text-yamaha-cyan font-mono text-sm">{successVisit.visitCode}</span>
+                <span className="font-bold text-[#00E5FF] font-mono text-sm">{successVisit.visitCode}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-400">Visitor:</span>
@@ -124,19 +124,23 @@ export default function VisitModal({
                 <span className="font-bold text-white">{successVisit.visitTime}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-400">Vehicle of Interest:</span>
-                <span className="font-bold text-yamaha-cyan">{successVisit.bikeName}</span>
+                <span className="text-gray-400">Location:</span>
+                <span className="font-bold text-white">Near SBI Bank, Mahagama</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-400">Contact Line:</span>
+                <span className="font-bold text-[#10B981]">9304456205</span>
               </div>
             </div>
 
-            <div className="mt-5 p-3 rounded-xl bg-blue-950/40 border border-blue-500/20 text-[11px] text-blue-200 max-w-md mx-auto flex items-center gap-2 text-left">
-              <ShieldCheck className="w-4 h-4 text-yamaha-cyan shrink-0" />
-              <span>We have scheduled an automated 24-hour and 2-hour WhatsApp reminder before your visit.</span>
+            <div className="mt-5 p-3 rounded-xl bg-emerald-950/40 border border-emerald-500/20 text-[11px] text-emerald-200 max-w-md mx-auto flex items-center gap-2 text-left">
+              <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+              <span>Bajaj Finserv EMI guidance and colour demonstrations available during your visit.</span>
             </div>
 
             <button
               onClick={handleReset}
-              className="mt-6 px-8 py-3 rounded-xl bg-yamaha-racing hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider"
+              className="mt-6 px-8 py-3 rounded-xl bg-gradient-to-r from-[#E53935] to-[#D32F2F] text-white font-bold text-xs uppercase tracking-wider cursor-pointer"
             >
               Done
             </button>
@@ -145,15 +149,15 @@ export default function VisitModal({
           /* FORM VIEW */
           <form onSubmit={handleSubmit}>
             <div className="mb-6">
-              <div className="flex items-center gap-2 text-yamaha-cyan text-xs font-bold uppercase tracking-widest mb-1">
-                <Calendar className="w-4 h-4" />
-                <span>Showroom Experience</span>
+              <div className="flex items-center gap-2 text-[#00E5FF] text-xs font-bold uppercase tracking-widest mb-1">
+                <Zap className="w-4 h-4 text-[#10B981]" />
+                <span>MAA Enterprises • Northstar EV</span>
               </div>
               <h2 className="text-2xl font-black text-white uppercase tracking-tight font-display">
                 BOOK A SHOWROOM VISIT
               </h2>
               <p className="text-xs text-gray-400">
-                Experience test rides and personalized consultations at Ekchari Road, Mohanpur, Godda.
+                Experience Northstar EV electric scooters in person. Near SBI Bank, Mahagama.
               </p>
             </div>
 
@@ -171,8 +175,8 @@ export default function VisitModal({
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="e.g. Amitesh Dubey"
-                  className="w-full p-2.5 rounded-xl glass-card text-xs text-white border border-white/10 focus:border-yamaha-cyan focus:outline-none"
+                  placeholder="e.g. Ramesh Kumar"
+                  className="w-full p-2.5 rounded-xl bg-white/5 text-xs text-white border border-white/10 focus:border-[#00E5FF] focus:outline-none"
                   required
                 />
               </div>
@@ -185,7 +189,7 @@ export default function VisitModal({
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="10-digit mobile number"
-                    className="w-full p-2.5 rounded-xl glass-card text-xs text-white border border-white/10 focus:border-yamaha-cyan focus:outline-none"
+                    className="w-full p-2.5 rounded-xl bg-white/5 text-xs text-white border border-white/10 focus:border-[#00E5FF] focus:outline-none"
                     required
                   />
                 </div>
@@ -196,7 +200,7 @@ export default function VisitModal({
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="optional"
-                    className="w-full p-2.5 rounded-xl glass-card text-xs text-white border border-white/10 focus:border-yamaha-cyan focus:outline-none"
+                    className="w-full p-2.5 rounded-xl bg-white/5 text-xs text-white border border-white/10 focus:border-[#00E5FF] focus:outline-none"
                   />
                 </div>
               </div>
@@ -209,7 +213,7 @@ export default function VisitModal({
                     value={visitDate}
                     onChange={(e) => setVisitDate(e.target.value)}
                     min={new Date().toISOString().split('T')[0]}
-                    className="w-full p-2.5 rounded-xl glass-card text-xs text-white border border-white/10 focus:border-yamaha-cyan focus:outline-none"
+                    className="w-full p-2.5 rounded-xl bg-white/5 text-xs text-white border border-white/10 focus:border-[#00E5FF] focus:outline-none"
                     required
                   />
                 </div>
@@ -218,13 +222,13 @@ export default function VisitModal({
                   <select
                     value={visitTime}
                     onChange={(e) => setVisitTime(e.target.value)}
-                    className="w-full p-2.5 rounded-xl glass-card text-xs text-white border border-white/10 focus:border-yamaha-cyan focus:outline-none bg-yamaha-card"
+                    className="w-full p-2.5 rounded-xl bg-[#0a1020] text-xs text-white border border-white/10 focus:border-[#00E5FF] focus:outline-none"
                     required
                   >
                     <option value="10:00 AM">10:00 AM - Morning Slot</option>
                     <option value="11:30 AM">11:30 AM - Morning Slot</option>
-                    <option value="01:00 PM">01:00 PM - Afternoon</option>
-                    <option value="03:30 PM">03:30 PM - Afternoon</option>
+                    <option value="01:00 PM">01:00 PM - Afternoon Slot</option>
+                    <option value="03:30 PM">03:30 PM - Afternoon Slot</option>
                     <option value="05:30 PM">05:30 PM - Evening Slot</option>
                     <option value="06:30 PM">06:30 PM - Evening Slot</option>
                   </select>
@@ -232,29 +236,30 @@ export default function VisitModal({
               </div>
 
               <div>
-                <label className="text-[11px] font-bold uppercase text-gray-300 block mb-1">Motorcycle of Interest</label>
+                <label className="text-[11px] font-bold uppercase text-gray-300 block mb-1">Colour of Interest</label>
                 <select
                   value={selectedBikeId}
                   onChange={(e) => setSelectedBikeId(e.target.value)}
-                  className="w-full p-2.5 rounded-xl glass-card text-xs text-white border border-white/10 focus:border-yamaha-cyan focus:outline-none bg-yamaha-card"
+                  className="w-full p-2.5 rounded-xl bg-[#0a1020] text-xs text-white border border-white/10 focus:border-[#00E5FF] focus:outline-none"
                 >
                   <option value="">Any / General Consultation</option>
-                  {bikes.map((b) => (
-                    <option key={b.id} value={b.id}>
-                      {b.name}
-                    </option>
-                  ))}
+                  <option value="var_turquoise">Turquoise Edition (Flagship)</option>
+                  <option value="var_red">Red Edition</option>
+                  <option value="var_pink">Pink Edition</option>
+                  <option value="var_skyblue">Sky Blue Edition</option>
+                  <option value="var_purple">Purple Edition</option>
+                  <option value="var_darkblue">Dark Blue Edition</option>
                 </select>
               </div>
 
               <div>
-                <label className="text-[11px] font-bold uppercase text-gray-300 block mb-1">Notes / Requirements</label>
+                <label className="text-[11px] font-bold uppercase text-gray-300 block mb-1">Notes / Enquiries</label>
                 <textarea
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   rows={2}
-                  placeholder="e.g. Want to test ride R15 and discuss exchange of my old bike"
-                  className="w-full p-2.5 rounded-xl glass-card text-xs text-white border border-white/10 focus:border-yamaha-cyan focus:outline-none resize-none"
+                  placeholder="e.g. Want to test ride Turquoise edition and ask about Bajaj Finserv EMI"
+                  className="w-full p-2.5 rounded-xl bg-white/5 text-xs text-white border border-white/10 focus:border-[#00E5FF] focus:outline-none resize-none"
                 />
               </div>
             </div>
@@ -262,7 +267,7 @@ export default function VisitModal({
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3.5 rounded-xl bg-yamaha-racing hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-yamaha-blue/40 transition-all transform active:scale-95 disabled:opacity-50"
+              className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#E53935] to-[#D32F2F] hover:from-[#EF5350] hover:to-[#E53935] text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-red-600/30 transition-all transform active:scale-95 disabled:opacity-50 cursor-pointer"
             >
               {loading ? (
                 <>

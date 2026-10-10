@@ -284,31 +284,30 @@ export default function HeroSection({ onOpenVisitModal, onExploreBikes }: HeroSe
     scrollProgress < 0.16
       ? 1
       : scrollProgress > 0.28
-      ? 0
-      : 1 - (scrollProgress - 0.16) / (0.28 - 0.16);
+        ? 0
+        : 1 - (scrollProgress - 0.16) / (0.28 - 0.16);
 
   const stage2Opacity =
     scrollProgress < 0.26 || scrollProgress > 0.72
       ? 0
       : scrollProgress < 0.36
-      ? (scrollProgress - 0.26) / (0.36 - 0.26)
-      : scrollProgress > 0.64
-      ? 1 - (scrollProgress - 0.64) / (0.72 - 0.64)
-      : 1;
+        ? (scrollProgress - 0.26) / (0.36 - 0.26)
+        : scrollProgress > 0.64
+          ? 1 - (scrollProgress - 0.64) / (0.72 - 0.64)
+          : 1;
 
   const stage3Opacity =
     scrollProgress < 0.72
       ? 0
       : scrollProgress < 0.82
-      ? (scrollProgress - 0.72) / (0.82 - 0.72)
-      : 1;
+        ? (scrollProgress - 0.72) / (0.82 - 0.72)
+        : 1;
 
   return (
     <section
       ref={containerRef}
-      className={`relative w-full bg-black select-none ${
-        isMobile ? 'h-[290vh]' : 'h-[360vh]'
-      }`}
+      className={`relative w-full bg-black select-none ${isMobile ? 'h-[290vh]' : 'h-[360vh]'
+        }`}
     >
       {/* Pinned Viewport Container */}
       <div className="sticky top-0 h-screen h-[100dvh] w-full overflow-hidden">
@@ -343,26 +342,11 @@ export default function HeroSection({ onOpenVisitModal, onExploreBikes }: HeroSe
                   transform: `translate(-50%, ${(1 - stage1Opacity) * -20}px)`,
                 }}
               >
-                {/* Brand pill badge */}
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/60 border border-[#00E5FF]/40 backdrop-blur-md mb-3 shadow-[0_0_15px_rgba(0,229,255,0.25)]">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#10B981] animate-pulse" />
-                  <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#00E5FF]">
-                    MAA ENTERPRISES • NORTHSTAR EV
-                  </span>
-                </div>
 
-                {/* Requested Headline */}
-                <h1 className="font-hero-headline text-4xl sm:text-5xl tracking-tight leading-[0.95] mb-2.5">
-                  <span className="hero-text-metallic-white">YOUR JOURNEY. </span>
-                  <span className="hero-text-turquoise hero-text-glow-turquoise">
-                    ELECTRIFIED.
-                  </span>
-                </h1>
 
-                {/* Requested Supporting Text */}
-                <p className="text-xs font-normal text-white/85 max-w-xs mx-auto leading-relaxed drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]">
-                  Discover Northstar EV electric scooters designed for a smarter, cleaner ride.
-                </p>
+
+
+
 
                 {/* Accent Line */}
                 <div className="w-20 h-[2px] bg-gradient-to-r from-transparent via-[#00E5FF] to-transparent mx-auto mt-3 shadow-[0_0_8px_#00E5FF]" />
@@ -491,21 +475,11 @@ export default function HeroSection({ onOpenVisitModal, onExploreBikes }: HeroSe
                 className="absolute left-1/2 top-[20%] sm:top-[22%] md:top-[24%] -translate-x-1/2 text-center w-full max-w-4xl px-4"
                 style={{ transform: `translate(-50%, ${(1 - stage1Opacity) * -15}px)` }}
               >
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/50 border border-[#00E5FF]/30 backdrop-blur-md mb-3">
-                  <span className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse" />
-                  <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-[0.25em] text-[#00E5FF]">
-                    MAA ENTERPRISES • NEAR SBI BANK, MAHAGAMA
-                  </span>
-                </div>
 
-                <h1 className="font-hero-headline text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] tracking-[-0.015em] leading-[0.95] mb-3 sm:mb-4">
-                  <span className="hero-text-metallic-white">YOUR JOURNEY. </span>
-                  <span className="hero-text-turquoise hero-text-glow-turquoise">ELECTRIFIED.</span>
-                </h1>
 
-                <p className="text-xs sm:text-sm md:text-base font-normal text-white/80 max-w-lg mx-auto leading-relaxed mb-4 sm:mb-5 drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]">
-                  Discover Northstar EV electric scooters designed for a smarter, cleaner ride. Electric scooter sales, service & genuine spare parts.
-                </p>
+
+
+
 
                 <div className="flex items-center justify-center gap-3 sm:gap-4">
                   <span className="w-12 sm:w-20 h-[1.5px] bg-gradient-to-r from-transparent to-[#00E5FF]" />

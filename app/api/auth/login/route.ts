@@ -2,7 +2,7 @@ export const dynamic = 'force-dynamic';
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { getDb } from '@/lib/db';
-import { signToken, logActivity } from '@/lib/auth';
+import { signToken, logActivity, COOKIE_NAME } from '@/lib/auth';
 
 export async function POST(request: Request) {
   try {
@@ -41,7 +41,7 @@ export async function POST(request: Request) {
     });
 
     response.cookies.set({
-      name: 'hira_admin_token',
+      name: COOKIE_NAME,
       value: token,
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',

@@ -49,19 +49,16 @@ export default function AdminLoginPage() {
       <div className="w-full max-w-md relative z-10">
         {/* Dealership Brand Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-yamaha-racing shadow-xl shadow-yamaha-blue/50 mb-3 border border-yamaha-cyan/30">
-            <svg viewBox="0 0 100 100" className="w-8 h-8 fill-white">
-              <circle cx="50" cy="50" r="46" fill="none" stroke="white" strokeWidth="6" />
-              <path d="M50 16 L50 84 M16 50 L84 50 M26 26 L74 74 M74 26 L26 74" stroke="white" strokeWidth="4" />
-            </svg>
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-red-600 to-rose-700 shadow-xl shadow-red-900/50 mb-3 border border-red-500/30">
+            <span className="text-white font-black text-2xl">M</span>
           </div>
           <h1 className="text-2xl font-black uppercase tracking-tight font-display text-white">
-            HIRA AUTO AGENCY
+            MAA ENTERPRISES
           </h1>
-          <p className="text-xs font-bold uppercase tracking-widest text-yamaha-cyan mt-0.5">
-            Yamaha Dealership Operations CRM
+          <p className="text-xs font-bold uppercase tracking-widest text-cyan-400 mt-0.5">
+            Northstar EV Dealership CRM
           </p>
-          <span className="text-[11px] text-gray-400">Mohanpur, Godda • Secure Portal</span>
+          <span className="text-[11px] text-gray-400">Near SBI Bank, Mahagama • Secure Operations</span>
         </div>
 
         {/* Login Card */}
@@ -85,8 +82,8 @@ export default function AdminLoginPage() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@hiraauto.com"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl glass-card text-xs text-white border border-white/10 focus:border-yamaha-cyan focus:outline-none"
+                  placeholder="admin@maaenterprises.com"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl glass-card text-xs text-white border border-white/10 focus:border-red-500 focus:outline-none"
                   required
                 />
               </div>
@@ -101,7 +98,7 @@ export default function AdminLoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl glass-card text-xs text-white border border-white/10 focus:border-yamaha-cyan focus:outline-none"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl glass-card text-xs text-white border border-white/10 focus:border-red-500 focus:outline-none"
                   required
                 />
               </div>
@@ -110,7 +107,7 @@ export default function AdminLoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 rounded-xl bg-yamaha-racing hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-yamaha-blue/40 transition-all transform active:scale-95 disabled:opacity-50 mt-2"
+              className="w-full py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-red-900/40 transition-all transform active:scale-95 disabled:opacity-50 mt-2"
             >
               {loading ? (
                 <>
@@ -129,29 +126,22 @@ export default function AdminLoginPage() {
           {/* Quick Demo Credentials Autofill */}
           <div className="mt-8 pt-5 border-t border-white/10">
             <span className="text-[10px] uppercase font-bold tracking-wider text-gray-400 block mb-2 text-center">
-              Quick Autofill Demo Accounts (Pass: admin123)
+              Quick Autofill Credentials (Password: admin123)
             </span>
-            <div className="grid grid-cols-3 gap-1.5 text-[10px]">
+            <div className="grid grid-cols-2 gap-2 text-[10px]">
               <button
                 type="button"
-                onClick={() => autofillCredentials('admin@hiraauto.com')}
-                className="p-2 rounded-lg glass-card hover:bg-white/10 text-yamaha-cyan font-bold transition-colors truncate"
+                onClick={() => autofillCredentials('admin@maaenterprises.com')}
+                className="p-2 rounded-lg glass-card hover:bg-white/10 text-cyan-400 font-bold transition-colors truncate"
               >
                 Super Admin
               </button>
               <button
                 type="button"
-                onClick={() => autofillCredentials('sales@hiraauto.com')}
+                onClick={() => autofillCredentials('sales@maaenterprises.com')}
                 className="p-2 rounded-lg glass-card hover:bg-white/10 text-emerald-400 font-bold transition-colors truncate"
               >
-                Sales Head
-              </button>
-              <button
-                type="button"
-                onClick={() => autofillCredentials('service@hiraauto.com')}
-                className="p-2 rounded-lg glass-card hover:bg-white/10 text-amber-400 font-bold transition-colors truncate"
-              >
-                Service Lead
+                Sales Manager
               </button>
             </div>
           </div>
@@ -161,7 +151,7 @@ export default function AdminLoginPage() {
         <div className="text-center mt-6">
           <a
             href="/"
-            className="text-xs text-gray-400 hover:text-yamaha-cyan transition-colors"
+            className="text-xs text-gray-400 hover:text-cyan-400 transition-colors"
           >
             ← Return to Public Dealership Website
           </a>

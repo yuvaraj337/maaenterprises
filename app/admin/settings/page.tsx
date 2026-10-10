@@ -146,9 +146,9 @@ export default function AdminSettingsPage() {
                 </label>
                 <input
                   type="text"
-                  value={settings['dealership_name'] || 'Hira Auto Agency'}
+                  value={settings['dealership_name'] || 'MAA Enterprises — Northstar EV'}
                   onChange={(e) => handleChange('dealership_name', e.target.value)}
-                  className="w-full bg-[#121722] border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-yamaha-cyan text-sm"
+                  className="w-full bg-[#121722] border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-red-500 text-sm"
                 />
               </div>
 
@@ -158,9 +158,9 @@ export default function AdminSettingsPage() {
                 </label>
                 <input
                   type="text"
-                  value={settings['dealership_phone'] || '+91 62012 38401'}
+                  value={settings['dealership_phone'] || '9304456205'}
                   onChange={(e) => handleChange('dealership_phone', e.target.value)}
-                  className="w-full bg-[#121722] border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-yamaha-cyan text-sm"
+                  className="w-full bg-[#121722] border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-red-500 text-sm"
                 />
               </div>
 
@@ -170,9 +170,9 @@ export default function AdminSettingsPage() {
                 </label>
                 <input
                   type="text"
-                  value={settings['dealership_address'] || 'Ekchari Road, Mohanpur, Godda, Jharkhand 814154'}
+                  value={settings['dealership_address'] || 'Near SBI Bank, Mahagama'}
                   onChange={(e) => handleChange('dealership_address', e.target.value)}
-                  className="w-full bg-[#121722] border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-yamaha-cyan text-sm"
+                  className="w-full bg-[#121722] border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-red-500 text-sm"
                 />
               </div>
 
@@ -182,21 +182,21 @@ export default function AdminSettingsPage() {
                 </label>
                 <input
                   type="email"
-                  value={settings['dealership_email'] || 'Sachinbhagat1655@gmail.com'}
+                  value={settings['dealership_email'] || 'contact@maaenterprises.com'}
                   onChange={(e) => handleChange('dealership_email', e.target.value)}
-                  className="w-full bg-[#121722] border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-yamaha-cyan text-sm"
+                  className="w-full bg-[#121722] border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-red-500 text-sm"
                 />
               </div>
 
               <div>
                 <label className="block text-xs font-bold uppercase text-white/70 mb-1.5">
-                  Operating Hours
+                  Dealership Proprietor
                 </label>
                 <input
                   type="text"
-                  value={settings['operating_hours'] || '09:30 AM - 07:30 PM (All 7 Days)'}
-                  onChange={(e) => handleChange('operating_hours', e.target.value)}
-                  className="w-full bg-[#121722] border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-yamaha-cyan text-sm"
+                  value={settings['proprietor'] || 'J.K. Poddar'}
+                  onChange={(e) => handleChange('proprietor', e.target.value)}
+                  className="w-full bg-[#121722] border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-red-500 text-sm"
                 />
               </div>
             </div>

@@ -158,11 +158,11 @@ export default function AdminWhatsAppPage() {
           templateName: directTemplate,
           variables: {
             customer_name: directCustomerName || 'Valued Customer',
-            bike_name: 'Yamaha Motorcycle',
+            bike_name: 'Northstar EV Electric Scooter',
             visit_date: 'Tomorrow',
             visit_time: '11:00 AM',
-            dealership_name: 'Hira Auto Agency Yamaha',
-            dealership_phone: '+91 62012 38401'
+            dealership_name: 'MAA Enterprises — Northstar EV',
+            dealership_phone: '+91 9304456205'
           }
         })
       });
@@ -192,7 +192,7 @@ export default function AdminWhatsAppPage() {
             WhatsApp Notification Dispatcher
           </h1>
           <p className="text-sm text-white/50">
-            Automated 24h/2h showroom visit reminders, customer booking updates, and templated notifications for Hira Auto Agency.
+            Automated 24h/2h showroom visit reminders, customer enquiry updates, and templated notifications for MAA Enterprises — Northstar EV.
           </p>
         </div>
 

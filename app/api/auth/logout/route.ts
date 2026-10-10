@@ -1,10 +1,11 @@
 export const dynamic = 'force-dynamic';
 import { NextResponse } from 'next/server';
+import { COOKIE_NAME } from '@/lib/auth';
 
 export async function POST() {
   const response = NextResponse.json({ success: true, message: 'Logged out successfully' });
   response.cookies.set({
-    name: 'hira_admin_token',
+    name: COOKIE_NAME,
     value: '',
     httpOnly: true,
     expires: new Date(0),

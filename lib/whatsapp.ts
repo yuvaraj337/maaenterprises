@@ -38,9 +38,9 @@ export async function sendWhatsAppMessage(params: {
   settingsRows.forEach(r => { settingsMap[r.key] = r.value; });
 
   const mergedVars: TemplateVariables = {
-    dealership_name: settingsMap['dealership_name'] || 'Hira Auto Agency',
-    dealership_phone: settingsMap['dealership_phone'] || '+91 62012 38401',
-    dealership_address: settingsMap['dealership_address'] || 'Ekchari Road, Mohanpur, Godda',
+    dealership_name: settingsMap['dealership_name'] || 'MAA Enterprises',
+    dealership_phone: settingsMap['dealership_phone'] || '9304456205',
+    dealership_address: settingsMap['dealership_address'] || 'Near SBI Bank, Mahagama',
     ...params.variables
   };
 
@@ -50,7 +50,7 @@ export async function sendWhatsAppMessage(params: {
     params.templateName
   ) as { body: string } | undefined;
 
-  const rawBody = template?.body || 'Hello {{customer_name}}, this is an update regarding your Yamaha booking from {{dealership_name}}.';
+  const rawBody = template?.body || 'Hello {{customer_name}}, this is an update regarding your Northstar EV enquiry from {{dealership_name}}.';
   const renderedBody = renderTemplate(rawBody, mergedVars);
 
   // Check per-customer reminders toggle if customerId provided
@@ -104,7 +104,7 @@ export async function sendWhatsAppMessage(params: {
     }
   } else {
     // Verified simulated dispatch logged to database
-    providerMessageId = `sim_hira_${Date.now()}`;
+    providerMessageId = `sim_maa_${Date.now()}`;
     deliveryStatus = 'Delivered';
   }
 

@@ -86,18 +86,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <aside className="hidden lg:flex lg:flex-col w-64 bg-[#0A0D14] border-r border-white/10 shrink-0 select-none">
         {/* Logo & Dealership Brand */}
         <div className="p-5 border-b border-white/10 flex items-center gap-3">
-          <div className="w-8 h-8 rounded-xl bg-yamaha-racing flex items-center justify-center shadow-md shadow-yamaha-blue/50 shrink-0">
-            <svg viewBox="0 0 100 100" className="w-5 h-5 fill-white">
-              <circle cx="50" cy="50" r="46" fill="none" stroke="white" strokeWidth="6" />
-              <path d="M50 16 L50 84 M16 50 L84 50 M26 26 L74 74 M74 26 L26 74" stroke="white" strokeWidth="4" />
-            </svg>
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-red-600 to-rose-700 flex items-center justify-center shadow-md shadow-red-900/50 shrink-0">
+            <span className="text-white font-black text-xs">M</span>
           </div>
           <div>
             <span className="text-xs font-black uppercase tracking-wider text-white block">
-              HIRA AUTO AGENCY
+              MAA ENTERPRISES
             </span>
-            <span className="text-[10px] text-yamaha-cyan font-bold uppercase tracking-widest block">
-              Yamaha CRM Operations
+            <span className="text-[10px] text-cyan-400 font-bold uppercase tracking-widest block">
+              Northstar EV Operations
             </span>
           </div>
         </div>
@@ -163,7 +160,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <div className="w-72 bg-[#0A0D14] h-full p-4 flex flex-col justify-between border-r border-white/10 animate-slideRight">
             <div>
               <div className="flex items-center justify-between pb-4 border-b border-white/10 mb-4">
-                <span className="text-xs font-black uppercase text-white">Hira Auto Agency CRM</span>
+                <span className="text-xs font-black uppercase text-white">MAA Enterprises CRM</span>
                 <button
                   onClick={() => setMobileNavOpen(false)}
                   className="p-1 text-gray-400 hover:text-white"
@@ -182,7 +179,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                       href={item.href}
                       onClick={() => setMobileNavOpen(false)}
                       className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold ${
-                        isActive ? 'bg-yamaha-racing text-white' : 'text-gray-400 hover:text-white'
+                        isActive ? 'bg-red-600 text-white' : 'text-gray-400 hover:text-white'
                       }`}
                     >
                       <Icon className="w-4 h-4" />
@@ -218,11 +215,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <Menu className="w-5 h-5" />
             </button>
             <div className="hidden sm:block">
-              <span className="text-[10px] uppercase font-bold text-yamaha-cyan tracking-wider block">
-                Yamaha Dealership Operations
+              <span className="text-[10px] uppercase font-bold text-cyan-400 tracking-wider block">
+                Northstar EV Operations
               </span>
               <h2 className="text-xs font-bold text-gray-300">
-                Mohanpur Branch, Godda, Jharkhand
+                Near SBI Bank, Mahagama, Jharkhand
               </h2>
             </div>
           </div>
